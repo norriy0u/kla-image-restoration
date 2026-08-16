@@ -89,11 +89,11 @@ class SSIMLoss(nn.Module):
         return window.unsqueeze(0).unsqueeze(0)  # (1, 1, size, size)
 
     def _ssim(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        # Cast to float32: F.conv2d weight (self.window) is float32
+        # Ensure same device and dtype as input (handles AMP float16 and CPU/GPU mismatch)
         x, y = x.float(), y.float()
         C1, C2 = 0.01 ** 2, 0.03 ** 2
         pad = self.window_size // 2
-        w = self.window  # float32 registered buffer
+        w = self.window.to(device=x.device, dtype=x.dtype)
 
         mu_x = F.conv2d(x, w, padding=pad, groups=1)
         mu_y = F.conv2d(y, w, padding=pad, groups=1)
@@ -131,10 +131,12 @@ class EdgeLoss(nn.Module):
         self.register_buffer("sobel_y", sobel_y.view(1, 1, 3, 3))
 
     def _gradient_magnitude(self, x: torch.Tensor) -> torch.Tensor:
-        # Cast to float32: sobel_x/y buffers are float32, F.conv2d requires matching dtypes
+        # Move kernels to same device and dtype as input
         x = x.float()
-        gx = F.conv2d(x, self.sobel_x, padding=1)
-        gy = F.conv2d(x, self.sobel_y, padding=1)
+        kx = self.sobel_x.to(device=x.device, dtype=x.dtype)
+        ky = self.sobel_y.to(device=x.device, dtype=x.dtype)
+        gx = F.conv2d(x, kx, padding=1)
+        gy = F.conv2d(x, ky, padding=1)
         return torch.sqrt(gx ** 2 + gy ** 2 + 1e-6)
 
     def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
