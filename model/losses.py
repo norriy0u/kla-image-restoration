@@ -57,11 +57,13 @@ class FrequencyLoss(nn.Module):
         self.loss_weight = loss_weight
 
     def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
-        # (B, C, H, W) → FFT along spatial dims
-        pred_fft = torch.fft.rfft2(pred, norm="ortho")
-        target_fft = torch.fft.rfft2(target, norm="ortho")
+        # Cast to float32: rfft2 does not support float16 on all CUDA versions
+        pred_f   = pred.float()
+        target_f = target.float()
+        pred_fft   = torch.fft.rfft2(pred_f,   norm="ortho")
+        target_fft = torch.fft.rfft2(target_f, norm="ortho")
 
-        pred_amp = torch.log1p(torch.abs(pred_fft))
+        pred_amp   = torch.log1p(torch.abs(pred_fft))
         target_amp = torch.log1p(torch.abs(target_fft))
 
         return F.mse_loss(pred_amp, target_amp) * self.loss_weight
@@ -87,9 +89,11 @@ class SSIMLoss(nn.Module):
         return window.unsqueeze(0).unsqueeze(0)  # (1, 1, size, size)
 
     def _ssim(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        # Cast to float32: F.conv2d weight (self.window) is float32
+        x, y = x.float(), y.float()
         C1, C2 = 0.01 ** 2, 0.03 ** 2
         pad = self.window_size // 2
-        w = self.window
+        w = self.window  # float32 registered buffer
 
         mu_x = F.conv2d(x, w, padding=pad, groups=1)
         mu_y = F.conv2d(y, w, padding=pad, groups=1)
@@ -97,8 +101,8 @@ class SSIMLoss(nn.Module):
         mu_x2, mu_y2 = mu_x ** 2, mu_y ** 2
         mu_xy = mu_x * mu_y
 
-        sig_x = F.conv2d(x * x, w, padding=pad, groups=1) - mu_x2
-        sig_y = F.conv2d(y * y, w, padding=pad, groups=1) - mu_y2
+        sig_x  = F.conv2d(x * x, w, padding=pad, groups=1) - mu_x2
+        sig_y  = F.conv2d(y * y, w, padding=pad, groups=1) - mu_y2
         sig_xy = F.conv2d(x * y, w, padding=pad, groups=1) - mu_xy
 
         ssim_map = (
@@ -127,6 +131,8 @@ class EdgeLoss(nn.Module):
         self.register_buffer("sobel_y", sobel_y.view(1, 1, 3, 3))
 
     def _gradient_magnitude(self, x: torch.Tensor) -> torch.Tensor:
+        # Cast to float32: sobel_x/y buffers are float32, F.conv2d requires matching dtypes
+        x = x.float()
         gx = F.conv2d(x, self.sobel_x, padding=1)
         gy = F.conv2d(x, self.sobel_y, padding=1)
         return torch.sqrt(gx ** 2 + gy ** 2 + 1e-6)
