@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Data (never commit the dataset)
+data/
+*.npy
+
+# Outputs (commit selectively)
+outputs/
+logs/
+logs_test/
+
+# Model weights — use Git LFS or link to Drive/HuggingFace
+weights/*.pt
+weights/*.onnx
+weights/*.h5
+# Uncomment to track weights with Git LFS:
+# !weights/best_model.pt
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# OS
+.DS_Store
+__MACOSX/
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Virtualenv
+venv/
+env/
+.env
