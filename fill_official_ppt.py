@@ -83,7 +83,7 @@ def main():
             "- Speckle Overflow Normalization: Intensity clipping to [-0.05, 2.0] + log-rescaling to stabilize gradient flow.\n"
             "- Model Architecture: 1.81M parameter NAFNet-SR Tiny variant with SimpleGate, Simplified Channel Attention (SCA), and Depthwise Convolutions.\n"
             "- Composite Loss Function: L_total = 1.0*L_Charbonnier + 0.1*L_FFT + 0.2*L_SSIM + 0.1*L_Sobel.\n"
-            "- 4-Panel Demo Visuals: Inputs -> Restored -> Ground Truth -> Residual/Confidence Heatmap."
+            "- 4-Panel Demo Visuals: Inputs -> Restored -> Ground Truth -> Error Residual Heatmap (|Pred - GT|)."
         ),
 
         # Slide 6: Innovation & Uniqueness
