@@ -245,9 +245,20 @@ def main():
     except ImportError:
         writer, use_tb = None, False
 
-    # Resume
+    # Resume / Auto-resume
     start_epoch = 0
     best_ssim = 0.0
+    
+    if not args.resume and os.path.exists(args.weights_dir):
+        import glob
+        ckpts = sorted(
+            glob.glob(os.path.join(args.weights_dir, "checkpoint_epoch*.pt")),
+            key=lambda x: int(os.path.basename(x).replace("checkpoint_epoch", "").replace(".pt", "")) if os.path.basename(x).replace("checkpoint_epoch", "").replace(".pt", "").isdigit() else 0
+        )
+        if ckpts:
+            args.resume = ckpts[-1]
+            print(f"[Train] 🔄 Auto-resuming from latest checkpoint: {args.resume}")
+
     if args.resume and os.path.isfile(args.resume):
         ckpt = torch.load(args.resume, map_location=device)
         model.load_state_dict(ckpt["model"])
@@ -255,7 +266,7 @@ def main():
         scheduler.load_state_dict(ckpt["scheduler"])
         start_epoch = ckpt["epoch"] + 1
         best_ssim = ckpt.get("best_ssim", 0.0)
-        print(f"[Train] Resumed from epoch {start_epoch}")
+        print(f"[Train] Resumed from epoch {start_epoch} (best SSIM: {best_ssim:.4f})")
 
     # Training loop
     print(f"\n{'='*65}")
@@ -307,15 +318,19 @@ def main():
                     best_path,
                 )
                 print(f"  ✓ Best model saved (SSIM={best_ssim:.4f})")
+            import sys
+            sys.stdout.flush()
         else:
             elapsed = time.time() - t0
             print(
                 f"Epoch [{epoch+1:>3}/{args.epochs}] "
                 f"lr={current_lr:.2e} | train={train_loss:.4f} | {elapsed:.1f}s"
             )
+            import sys
+            sys.stdout.flush()
 
-        # Periodic checkpoint
-        if (epoch + 1) % 25 == 0:
+        # Periodic checkpoint every 10 epochs
+        if (epoch + 1) % 10 == 0 or (epoch + 1) == args.epochs:
             ckpt_path = os.path.join(args.weights_dir, f"checkpoint_epoch{epoch+1}.pt")
             torch.save(
                 {
@@ -327,7 +342,9 @@ def main():
                 },
                 ckpt_path,
             )
-            print(f"  Checkpoint saved → {ckpt_path}")
+            print(f"  ✓ Checkpoint saved → {ckpt_path}")
+            import sys
+            sys.stdout.flush()
 
     print(f"\n[Train] Complete. Best val SSIM: {best_ssim:.4f}")
     if use_tb and writer:
