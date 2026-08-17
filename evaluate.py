@@ -194,9 +194,13 @@ def main():
             save_png = False
 
     for batch_idx, batch in enumerate(loader):
-        lr = batch["lr"].to(device, non_blocking=True)
-        stems = batch["stem"]
-        paths = batch["path"]
+        if isinstance(batch, (list, tuple)):
+            lr = batch[0]
+            stems = [os.path.splitext(os.path.basename(p))[0] for p in batch[1]]
+        else:
+            lr = batch["lr"]
+            stems = batch.get("stem", [os.path.splitext(os.path.basename(p))[0] for p in batch.get("path", [])])
+        lr = lr.to(device, non_blocking=True)
 
         t0 = time.perf_counter()
         with torch.no_grad():
