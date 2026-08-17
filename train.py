@@ -331,7 +331,7 @@ def main():
                     },
                     best_path,
                 )
-                print(f"  ✓ Best model saved (SSIM={best_ssim:.4f})")
+                print(f"  [OK] Best model saved (SSIM={best_ssim:.4f})")
             import sys
             sys.stdout.flush()
         else:
@@ -356,7 +356,7 @@ def main():
                 },
                 ckpt_path,
             )
-            print(f"  ✓ Checkpoint saved → {ckpt_path}")
+            print(f"  [OK] Checkpoint saved -> {ckpt_path}")
             import sys
             sys.stdout.flush()
 
