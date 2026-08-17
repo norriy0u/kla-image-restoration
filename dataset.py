@@ -13,6 +13,11 @@ import torch
 from torch.utils.data import Dataset
 
 
+def load_npy(path: str) -> np.ndarray:
+    """Utility helper to load numpy array from filepath."""
+    return np.load(path)
+
+
 def normalize_noisy_lr(lr_arr: np.ndarray) -> np.ndarray:
     """
     Normalizes NoisyLR images containing speckle noise.
@@ -22,6 +27,10 @@ def normalize_noisy_lr(lr_arr: np.ndarray) -> np.ndarray:
     clipped = np.clip(lr_arr, -0.05, 2.0)
     scaled = (clipped + 0.05) / 2.05
     return scaled.astype(np.float32)
+
+
+# Alias with British spelling for backwards compatibility
+normalise_noisy_lr = normalize_noisy_lr
 
 
 def normalize_gt(gt_arr: np.ndarray) -> np.ndarray:
@@ -56,7 +65,6 @@ class RestorationDataset(Dataset):
         self.patch_size_gt = patch_size_gt
         self.augment = augment and (split == "train")
 
-        # Find matching .npy files
         gt_files = sorted(glob.glob(os.path.join(gt_dir, "*.npy")))
         lr_files = sorted(glob.glob(os.path.join(lr_dir, "*.npy")))
 
@@ -65,7 +73,6 @@ class RestorationDataset(Dataset):
         if len(lr_files) == 0:
             raise FileNotFoundError(f"No .npy files found in LR directory: {lr_dir}")
 
-        # Pair up by file stem
         gt_dict = {os.path.splitext(os.path.basename(f))[0]: f for f in gt_files}
         lr_dict = {os.path.splitext(os.path.basename(f))[0]: f for f in lr_files}
 
@@ -73,7 +80,6 @@ class RestorationDataset(Dataset):
         if len(common_stems) == 0:
             raise ValueError(f"No matching file stems between GT ({len(gt_files)}) and LR ({len(lr_files)})")
 
-        # Split train / val deterministically
         rng = random.Random(seed)
         rng.shuffle(common_stems)
 
@@ -90,29 +96,24 @@ class RestorationDataset(Dataset):
         return len(self.stems)
 
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
-        gt_np = np.load(self.gt_paths[idx])
-        lr_np = np.load(self.lr_paths[idx])
+        gt_np = load_npy(self.gt_paths[idx])
+        lr_np = load_npy(self.lr_paths[idx])
 
         gt_norm = normalize_gt(gt_np)
         lr_norm = normalize_noisy_lr(lr_np)
 
-        # Augmentations for training split
         if self.augment:
-            # Random Horizontal Flip
             if random.random() > 0.5:
                 gt_norm = np.fliplr(gt_norm).copy()
                 lr_norm = np.fliplr(lr_norm).copy()
-            # Random Vertical Flip
             if random.random() > 0.5:
                 gt_norm = np.flipud(gt_norm).copy()
                 lr_norm = np.flipud(lr_norm).copy()
-            # Random 90-degree Rotation
             k = random.randint(0, 3)
             if k > 0:
                 gt_norm = np.rot90(gt_norm, k).copy()
                 lr_norm = np.rot90(lr_norm, k).copy()
 
-        # Add channel dimension (C, H, W)
         gt_tensor = torch.from_numpy(gt_norm).unsqueeze(0)  # (1, 256, 256)
         lr_tensor = torch.from_numpy(lr_norm).unsqueeze(0)  # (1, 128, 128)
 
@@ -137,7 +138,7 @@ class InferenceDataset(Dataset):
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, str]:
         path = self.file_paths[idx]
         filename = os.path.basename(path)
-        lr_np = np.load(path)
+        lr_np = load_npy(path)
         lr_norm = normalize_noisy_lr(lr_np)
         lr_tensor = torch.from_numpy(lr_norm).unsqueeze(0)
         return lr_tensor, filename
