@@ -16,12 +16,13 @@ outputs/
 logs/
 logs_test/
 
-# Model weights — use Git LFS or link to Drive/HuggingFace
+# Model weights
 weights/*.pt
 weights/*.onnx
 weights/*.h5
-# Uncomment to track weights with Git LFS:
-# !weights/best_model.pt
+
+# Allow tracking trained best_model.pt (21.95 MB)
+!weights/best_model.pt
 
 # Jupyter
 .ipynb_checkpoints/
