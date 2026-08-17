@@ -19,8 +19,14 @@ Usage:
 
 import argparse
 import os
+import sys
 import time
 from pathlib import Path
+
+# Ensure script root is on sys.path
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
 
 import torch
 import torch.nn as nn
@@ -118,8 +124,12 @@ def train_one_epoch(model, loader, optimizer, scaler, loss_fn, device, use_amp, 
     n = 0
 
     for batch in loader:
-        lr = batch["lr"].to(device, non_blocking=True)
-        gt = batch["gt"].to(device, non_blocking=True)
+        if isinstance(batch, (list, tuple)):
+            lr, gt = batch[0], batch[1]
+        else:
+            lr, gt = batch["lr"], batch["gt"]
+        lr = lr.to(device, non_blocking=True)
+        gt = gt.to(device, non_blocking=True)
 
         optimizer.zero_grad(set_to_none=True)
 
@@ -152,8 +162,12 @@ def validate(model, loader, loss_fn, device, use_amp):
     n = 0
 
     for batch in loader:
-        lr = batch["lr"].to(device, non_blocking=True)
-        gt = batch["gt"].to(device, non_blocking=True)
+        if isinstance(batch, (list, tuple)):
+            lr, gt = batch[0], batch[1]
+        else:
+            lr, gt = batch["lr"], batch["gt"]
+        lr = lr.to(device, non_blocking=True)
+        gt = gt.to(device, non_blocking=True)
 
         with autocast(device_type='cuda', enabled=use_amp):
             pred = model(lr)
