@@ -3,7 +3,7 @@
 AI-based restoration of degraded semiconductor microscopic inspection images for **SEMICON India Hackathon 2026**.
 Handles speckle noise, Gaussian noise, and 2× super-resolution in a single forward pass.
 
-- **Model**: ReDI-NAFNet (Nonlinear Activation Free Network + Sub-Pixel PixelShuffle SR head)
+- **Model Variant**: ReDI-NAFNet Tiny (**1.81M Parameters**) — Nonlinear Activation Free Network + Sub-Pixel PixelShuffle SR head
 - **Input**: 128×128 NoisyLR `.npy` arrays (float32, handles speckle noise overflow >1.0+)
 - **Output**: 256×256 Restored `.npy` arrays (float32, range [0,1])
 
@@ -15,10 +15,10 @@ Evaluated across **3,200 dataset images**:
 
 | Metric | Score | Target / Description |
 |---|---|---|
-| **PSNR** | **25.49 dB** | Peak Signal-to-Noise Ratio |
+| **PSNR** | **25.49 dB** | Peak Signal-to-Noise Ratio (Baseline Checkpoint) |
 | **SSIM** | **0.6669** | Structural Similarity Index Measure |
 | **LPIPS** | **0.4387** | Learned Perceptual Quality Score |
-| **Inference Latency** | **36.5 ms / image** | Real-time edge processing speed |
+| **Inference Latency** | **36.5 ms / image** | Self-measured CPU Baseline (<5ms projected on H100 GPU) |
 | **Throughput** | **27.4 images / sec** | Edge manufacturing pipeline compatible |
 
 ---
@@ -33,7 +33,8 @@ pip install -r requirements.txt
 # Run standalone evaluation / test inference
 python evaluate.py \
     --input_dir /path/to/test_noisyLR/NoisyLR \
-    --output_dir ./outputs/test
+    --output_dir ./outputs/test \
+    --variant tiny
 ```
 
 Restored images are saved as `.npy` (float32) and `.png` (8-bit) in `./outputs/test/`.
@@ -55,7 +56,7 @@ kla-image-restoration/
 ├── utils/
 │   └── metrics.py       ← PSNR, SSIM, LPIPS metrics calculation
 ├── weights/
-│   └── best_model.pt    ← trained model weights checkpoint
+│   └── best_model.pt    ← trained 1.81M param model weights checkpoint (21.95 MB)
 └── requirements.txt
 ```
 
