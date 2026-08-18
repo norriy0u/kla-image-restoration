@@ -36,7 +36,7 @@
 **4-Panel Visual Demonstration & Residual Error Map**:
 ![4-Panel Visual Comparison](outputs/before_after_comparison.png)
 
-*Panels: (1) NoisyLR Input ($128\times128$), (2) ReDI-NAFNet Restored ($256\times256$), (3) Ground Truth ($256\times256$), (4) Error Residual Heatmap ($|\text{Pred} - \text{GT}|$)*
+**Panels:** (1) NoisyLR Input ($128 \times 128$), (2) ReDI-NAFNet Restored ($256 \times 256$), (3) Ground Truth ($256 \times 256$), (4) Error Residual Heatmap ($|\mathrm{Pred} - \mathrm{GT}|$)
 
 ---
 
