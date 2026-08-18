@@ -100,8 +100,7 @@ kla-image-restoration/
 1. **NAFNet Backbone**: Removes non-linear activations (GELU/ReLU) to avoid low-level feature degradation.
 2. **SimpleGate & SCA**: Dynamic channel attention feature routing for multi-degradation adaptation.
 3. **PixelShuffle Sub-Pixel SR**: 2× spatial resolution upsampling ($128\times128 \rightarrow 256\times256$).
-4. **Composite Loss**:
-   $$\mathcal{L}_{\text{total}} = 1.0\mathcal{L}_{\text{Charbonnier}} + 0.1\mathcal{L}_{\text{FFT}} + 0.2\mathcal{L}_{\text{SSIM}} + 0.1\mathcal{L}_{\text{Sobel}}$$
+4.1. **Composite Loss**: $\mathcal{L}_{\text{total}} = 1.0\mathcal{L}_{\text{Charbonnier}} + 0.1\mathcal{L}_{\text{FFT}} + 0.2\mathcal{L}_{\text{SSIM}} + 0.1\mathcal{L}_{\text{Sobel}}$
 
 ---
 
