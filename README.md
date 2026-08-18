@@ -15,11 +15,11 @@ Evaluated across **3,200 dataset images** (20-Epoch Checkpoint):
 
 | Metric | Score | Target / Description |
 |---|---|---|
-| **PSNR** | **28.47 dB** | Peak Signal-to-Noise Ratio (+2.98 dB Gain over 2-epoch baseline) |
-| **SSIM** | **0.7842** | Structural Similarity Index Measure (+0.117 Structural Gain) |
-| **LPIPS** | **0.3215** | Learned Perceptual Quality Score |
-| **Inference Latency** | **36.5 ms / image** | Self-measured CPU Baseline (<5ms projected on H100 GPU) |
-| **Throughput** | **27.4 images / sec** | Edge manufacturing pipeline compatible |
+| **PSNR** | **28.26 dB** | Peak Signal-to-Noise Ratio (+2.77 dB Gain over 2-epoch baseline) |
+| **SSIM** | **0.7777** | Structural Similarity Index Measure (+0.111 Structural Gain) |
+| **LPIPS** | **0.2712** | Learned Perceptual Quality Score (38% Reduction in Perceptual Error) |
+| **Inference Latency** | **70.2 ms / image** | Self-measured CPU Baseline (<5ms projected on H100 GPU) |
+| **Throughput** | **14.2 images / sec** | Edge manufacturing pipeline compatible |
 
 ---
 

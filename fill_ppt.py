@@ -102,10 +102,10 @@ def main():
             "Enables ultra-high precision semiconductor defect inspection on lower-cost high-speed optical/SEM sensors without requiring multi-million dollar hardware replacements."
         ),
         'List potential metrics or stats (e.g., "50% cost reduction", "2x efficiency").': (
-            "- PSNR Outcome: 28.47 dB (evaluated across 3,200 inspection images)\n"
-            "- Structural Similarity (SSIM): 0.7842 structural recovery score\n"
-            "- LPIPS Perceptual Distance: 0.3215 perceptual quality score\n"
-            "- Inference Throughput: 27.4 images/sec (36.5 ms CPU baseline; <5ms projected on NVIDIA H100/T4)"
+            "- PSNR Outcome: 28.26 dB (evaluated across 3,200 inspection images)\n"
+            "- Structural Similarity (SSIM): 0.7777 structural recovery score\n"
+            "- LPIPS Perceptual Distance: 0.2712 perceptual quality score\n"
+            "- Inference Throughput: 14.2 images/sec (70.2 ms CPU baseline; <5ms projected on NVIDIA H100/T4)"
         ),
 
         # Slide 8: Technology & Stack

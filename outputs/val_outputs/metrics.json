@@ -1,12 +1,12 @@
 {
   "n_images": 3200,
-  "total_time_s": 116.838,
-  "avg_time_ms": 36.51,
-  "throughput_imgs_per_sec": 27.39,
+  "total_time_s": 224.651,
+  "avg_time_ms": 70.2,
+  "throughput_imgs_per_sec": 14.24,
   "device": "cpu",
   "tta": false,
   "variant": "tiny",
-  "psnr": 25.4947,
-  "ssim": 0.6669,
-  "lpips": 0.4387
+  "psnr": 28.2599,
+  "ssim": 0.7777,
+  "lpips": 0.2712
 }
