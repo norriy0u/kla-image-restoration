@@ -25,7 +25,6 @@
 - [📊 Benchmark Results](#-benchmark-results)
 - [⚡ Quick Start](#-quick-start--standalone-inference)
 - [📁 Repository Structure](#-repository-structure)
-- [📊 Presentation Generator](#-presentation-generator-fill_pptpy)
 - [🔬 Model Architecture & Loss Function](#-model-architecture--loss-function)
 - [📜 Citations](#-citations)
 
@@ -94,20 +93,6 @@ kla-image-restoration/
 └── requirements.txt
 ```
 
----
-
-## 📊 Presentation Generator (`fill_ppt.py`)
-
-To populate the official hackathon PowerPoint template automatically:
-1. Make sure `Idea-Submission-Template_Hackathon-2026-1.pptx` is in your `Downloads` folder.
-2. Edit your team details in `fill_ppt.py`.
-3. Run:
-   ```bash
-   python fill_ppt.py
-   ```
-4. Output presentation will be saved to your `Downloads` folder as `KLA_Restoration_Final_Submission.pptx`.
-
----
 
 ## 🔬 Model Architecture & Loss Function
 
