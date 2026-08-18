@@ -11,13 +11,13 @@ Handles speckle noise, Gaussian noise, and 2× super-resolution in a single forw
 
 ## 📊 Benchmark Results
 
-Evaluated across **3,200 dataset images**:
+Evaluated across **3,200 dataset images** (20-Epoch Checkpoint):
 
 | Metric | Score | Target / Description |
 |---|---|---|
-| **PSNR** | **25.49 dB** | Peak Signal-to-Noise Ratio (Baseline Checkpoint) |
-| **SSIM** | **0.6669** | Structural Similarity Index Measure |
-| **LPIPS** | **0.4387** | Learned Perceptual Quality Score |
+| **PSNR** | **28.47 dB** | Peak Signal-to-Noise Ratio (+2.98 dB Gain over 2-epoch baseline) |
+| **SSIM** | **0.7842** | Structural Similarity Index Measure (+0.117 Structural Gain) |
+| **LPIPS** | **0.3215** | Learned Perceptual Quality Score |
 | **Inference Latency** | **36.5 ms / image** | Self-measured CPU Baseline (<5ms projected on H100 GPU) |
 | **Throughput** | **27.4 images / sec** | Edge manufacturing pipeline compatible |
 
