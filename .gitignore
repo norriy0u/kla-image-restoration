@@ -7,22 +7,24 @@ dist/
 build/
 .eggs/
 
-# Data (never commit the dataset)
+# Data (never commit raw training dataset)
 data/
-*.npy
-
-# Outputs (commit selectively)
-outputs/
-logs/
-logs_test/
 
 # Model weights
 weights/*.pt
 weights/*.onnx
 weights/*.h5
 
-# Allow tracking trained best_model.pt (21.95 MB)
+# Allow tracking trained best_model.pt
 !weights/best_model.pt
+
+# Outputs (allow committing metrics, plots, and test outputs)
+!outputs/
+!outputs/before_after_comparison.png
+!outputs/val_outputs/metrics.json
+!outputs/test_outputs/metrics.json
+!outputs/test_outputs/*.png
+!outputs/test_outputs/*.npy
 
 # Jupyter
 .ipynb_checkpoints/

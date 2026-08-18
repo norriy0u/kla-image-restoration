@@ -1,0 +1,9 @@
+{
+  "n_images": 400,
+  "total_time_s": 14.603,
+  "avg_time_ms": 36.51,
+  "throughput_imgs_per_sec": 27.39,
+  "device": "cpu",
+  "tta": false,
+  "variant": "tiny"
+}
