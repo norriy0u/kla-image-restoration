@@ -16,7 +16,9 @@
 ---
 
 > **Why ReDI-NAFNet?**
-> Rather than applying generic blurring or fixed filtering heuristics, **ReDI-NAFNet** combines **Nonlinear Activation Free (NAFNet) U-Net backbones** with **Gated Channel Attention (SimpleGate)** to dynamically decompose multi-scale degradations (*Speckle Noise Overflow $>1.0+$, Spatial Downsampling $128\times128 \rightarrow 256\times256$, and Gaussian Blur*) in a single high-throughput forward pass.
+> Rather than applying generic blurring or fixed filtering heuristics, **ReDI-NAFNet** combines **Nonlinear Activation Free (NAFNet) U-Net backbones** with **Gated Channel Attention (SimpleGate)** to dynamically decompose multi-scale degradations (*NoisyLR (128x128) ➔ Intensity Log-Clip [-0.05, 2.0] ➔ NAFNet-SR U-Net (1.81M) ➔ PixelShuffle 2x ➔ Restored Image (256x256)
+
+*) in a single high-throughput forward pass.
 
 ---
 
